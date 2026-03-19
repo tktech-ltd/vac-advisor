@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""
-VAC Advisory Data Fetcher
-Runs server-side (no CORS restrictions) to fetch all 4 government advisory sources.
-Writes advisory_data.json which the dashboard reads directly.
-"""
+
 
 import json
 import re
@@ -12,7 +8,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
 
 # ── VAC city config ────────────────────────────────────────────────────────────
 VAC_CITIES = [
@@ -35,7 +30,7 @@ VAC_CITIES = [
     {"city": "Dakar",       "country": "Senegal",        "iso": "SN", "uk": "senegal",                             "regional": False},
 ]
 
-# ── Fallback data (used if a source fails) ─────────────────────────────────────
+# ── Fallback data ──────────────────────────────────────────────────────────────
 FALLBACK = {
     "ca": {"BF":4,"ML":4,"NE":2,"CM":2,"CD":3,"ET":3,"CI":2,"GN":2,"GH":2,"NG":2,"KE":2,"MG":2,"ZA":2,"MU":2,"SN":2},
     "us": {"BF":4,"ML":4,"NE":4,"CM":2,"CD":4,"ET":3,"CI":2,"GN":2,"GH":2,"NG":3,"KE":2,"MG":2,"ZA":2,"MU":1,"SN":1},
@@ -44,18 +39,20 @@ FALLBACK = {
 }
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; VAC-Advisory-Monitor/2.0; +https://github.com/vac-advisory)",
-    "Accept": "application/json, application/xml, text/html, */*",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml,application/json;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
 }
 
-def get(url, timeout=20):
+def get(url, timeout=25):
     r = requests.get(url, headers=HEADERS, timeout=timeout)
     r.raise_for_status()
     return r
 
 # ── CANADA ─────────────────────────────────────────────────────────────────────
 def fetch_canada():
-    """Official GoC JSON API — advisory-state 0-4 maps to L1-L4."""
     print("Fetching Canada...")
     state_map = {0: 1, 1: 2, 2: 2, 3: 3, 4: 4}
     try:
@@ -73,20 +70,18 @@ def fetch_canada():
 
 # ── USA ────────────────────────────────────────────────────────────────────────
 def fetch_usa():
-    """Official State Dept RSS feed. Extract level from item title text."""
     print("Fetching USA...")
     try:
         xml_text = get("https://travel.state.gov/_res/rss/TAsTWs.xml").text
         result = {}
-        # Parse with ElementTree
         root = ET.fromstring(xml_text)
-        ns = {"dc": "http://purl.org/dc/elements/1.1/"}
+
         for item in root.iter("item"):
             title_el = item.find("title")
             if title_el is None or not title_el.text:
                 continue
             title = title_el.text.strip()
-            # Find ISO from category[domain=Country-Tag]
+
             iso = None
             lvl = None
             for cat in item.iter("category"):
@@ -98,13 +93,15 @@ def fetch_usa():
                     m = re.search(r"Level\s*(\d)", text, re.I)
                     if m:
                         lvl = int(m.group(1))
-            # Fallback: extract from title "Country - Level N: ..."
+
             if iso and lvl is None:
                 m = re.search(r"Level\s*(\d)", title, re.I)
                 if m:
                     lvl = int(m.group(1))
+
             if iso and lvl:
                 result[iso] = lvl
+
         print(f"  USA: {len(result)} countries")
         return result, True
     except Exception as e:
@@ -113,7 +110,6 @@ def fetch_usa():
 
 # ── UK FCDO ────────────────────────────────────────────────────────────────────
 def parse_uk_level(html_lower, slug):
-    """Parse FCDO advisory level from page HTML."""
     if "advise against all travel" in html_lower and "all but essential" not in html_lower:
         return 4
     if "all but essential travel to the whole" in html_lower:
@@ -128,10 +124,9 @@ def parse_uk_level(html_lower, slug):
         return 2
     if "exercise normal" in html_lower or "no travel warnings" in html_lower:
         return 1
-    return 2  # conservative default
+    return 2
 
 def fetch_uk():
-    """Scrape FCDO country pages. Deduplicated by slug."""
     print("Fetching UK FCDO...")
     slug_cache = {}
     result = {}
@@ -155,8 +150,6 @@ def fetch_uk():
     return result, True
 
 # ── AUSTRALIA ──────────────────────────────────────────────────────────────────
-# The destinations-export API endpoint is unreliable.
-# We scrape individual country pages instead — same approach as UK FCDO.
 AU_SLUG_MAP = {
     "BF": "africa/burkina-faso",
     "ML": "africa/mali",
@@ -176,13 +169,6 @@ AU_SLUG_MAP = {
 }
 
 def parse_au_level(html_lower):
-    """Parse Smartraveller advisory level from page HTML.
-    Smartraveller uses these exact phrases in their advice level banners:
-      Level 1: 'exercise normal safety precautions'
-      Level 2: 'exercise a high degree of caution'
-      Level 3: 'reconsider your need to travel'
-      Level 4: 'do not travel'
-    """
     if "do not travel" in html_lower:
         return 4
     if "reconsider your need to travel" in html_lower:
@@ -191,10 +177,9 @@ def parse_au_level(html_lower):
         return 2
     if "exercise normal safety precautions" in html_lower or "normal safety precautions" in html_lower:
         return 1
-    return 2  # conservative default
+    return 2
 
 def fetch_australia():
-    """Scrape individual Smartraveller country pages. Deduplicated by slug."""
     print("Fetching Australia (page scrape)...")
     slug_cache = {}
     result = {}
@@ -266,13 +251,31 @@ def main():
     print(f"VAC Advisory Fetch — {now}")
     print(f"{'='*60}")
 
-    ca_data, ca_ok = fetch_canada()
-    us_data, us_ok = fetch_usa()
-    uk_data, uk_ok = fetch_uk()
-    au_data, au_ok = fetch_australia()
+    try:
+        ca_data, ca_ok = fetch_canada()
+    except Exception as e:
+        print(f"  Canada UNEXPECTED ERROR: {e}")
+        ca_data, ca_ok = FALLBACK["ca"].copy(), False
+
+    try:
+        us_data, us_ok = fetch_usa()
+    except Exception as e:
+        print(f"  USA UNEXPECTED ERROR: {e}")
+        us_data, us_ok = FALLBACK["us"].copy(), False
+
+    try:
+        uk_data, uk_ok = fetch_uk()
+    except Exception as e:
+        print(f"  UK UNEXPECTED ERROR: {e}")
+        uk_data, uk_ok = FALLBACK["uk"].copy(), False
+
+    try:
+        au_data, au_ok = fetch_australia()
+    except Exception as e:
+        print(f"  Australia UNEXPECTED ERROR: {e}")
+        au_data, au_ok = FALLBACK["au"].copy(), False
 
     cities = []
-    seen_iso = {}  # for deduplication of scoring (same country, multiple cities)
 
     for c in VAC_CITIES:
         iso = c["iso"]
@@ -297,7 +300,7 @@ def main():
         })
 
     output = {
-        "generated":   now,
+        "generated":    now,
         "generated_ts": int(datetime.now(timezone.utc).timestamp()),
         "sources": {
             "ca": {"ok": ca_ok, "label": "Canada (travel.gc.ca)"},
@@ -308,20 +311,19 @@ def main():
         "cities": cities,
     }
 
-    # Write the JSON file
     out_path = Path(__file__).parent / "advisory_data.json"
     out_path.write_text(json.dumps(output, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\nWritten: {out_path} ({out_path.stat().st_size:,} bytes)")
 
-    # Summary
     bands = {}
     for c in cities:
         bands[c["band"]] = bands.get(c["band"], 0) + 1
     scores = [c["score"] for c in cities]
-    print(f"\nSummary: {bands}")
+    print(f"Summary: {bands}")
     print(f"Avg WCRI: {sum(scores)/len(scores):.1f} | Max: {max(scores)} | Min: {min(scores)}")
     print(f"Sources: CA={'OK' if ca_ok else 'FALLBACK'} | US={'OK' if us_ok else 'FALLBACK'} | "
           f"UK={'OK' if uk_ok else 'FALLBACK'} | AU={'OK' if au_ok else 'FALLBACK'}")
+    print(f"\nDone. Exit code 0.")
 
 if __name__ == "__main__":
     main()
