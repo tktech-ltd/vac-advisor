@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VAC Advisory Risk Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#08111f;--ink2:#0d1a2d;--ink3:#112240;--ink4:#1a3358;
+  --rim:#1e3a5f;--rim2:#2a4f7a;
+  --gold:#f0a500;--gold2:#ffc845;
+  --txt:#cdd9e5;--txt2:#8fa3bc;--txt3:#5a7a9a;--snow:#eaf2ff;
+  --go:#27ae60;--go-b:rgba(39,174,96,.13);--go-r:rgba(39,174,96,.38);
+  --yw:#c9940a;--yw-b:rgba(201,148,10,.13);--yw-r:rgba(201,148,10,.38);
+  --og:#c0622a;--og-b:rgba(192,98,42,.13);--og-r:rgba(192,98,42,.38);
+  --rd:#c0392b;--rd-b:rgba(192,57,43,.13);--rd-r:rgba(192,57,43,.38);
+  --mono:"IBM Plex Mono",monospace;--sans:"IBM Plex Sans",sans-serif;--serif:"Playfair Display",serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--ink);color:var(--txt);font-family:var(--sans);min-height:100vh;font-size:13px}
+.bar{background:var(--ink2);border-bottom:1px solid var(--rim);padding:0 24px;height:50px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.bar-l{display:flex;align-items:center;gap:14px}
+.tag{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.12em;color:var(--gold);background:rgba(240,165,0,.1);border:1px solid rgba(240,165,0,.28);padding:3px 10px;border-radius:3px;text-transform:uppercase}
+.bar-title{font-family:var(--mono);font-size:11px;color:var(--txt2)}
+.bar-r{display:flex;align-items:center;gap:8px}
+.spill{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;font-family:var(--mono);font-size:10px;font-weight:600;border:1px solid var(--rim2);background:var(--ink3)}
+.dot{width:7px;height:7px;border-radius:50%}
+.d-idle{background:var(--txt3)}
+.d-ok{background:var(--go);box-shadow:0 0 8px var(--go)}
+.d-warn{background:var(--yw)}
+.d-err{background:var(--rd)}
+.d-spin{background:var(--gold);animation:pulse .7s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.btn{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.05em;padding:6px 16px;border-radius:5px;cursor:pointer;border:none;transition:all .15s;text-transform:uppercase}
+.btn-go{background:var(--gold);color:var(--ink)}.btn-go:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-go:disabled{background:var(--ink4);color:var(--txt3);cursor:not-allowed;transform:none}
+.btn-ghost{background:transparent;color:var(--txt2);border:1px solid var(--rim2)}.btn-ghost:hover{background:var(--ink3);color:var(--txt)}
+.main{padding:22px 24px;max-width:1520px;margin:0 auto}
+.hdr{margin-bottom:16px}
+.hdr h1{font-family:var(--serif);font-size:23px;color:var(--snow);margin-bottom:4px}
+.hdr h1 em{color:var(--gold);font-style:normal}
+.meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:6px}
+.mi{font-family:var(--mono);font-size:10px;color:var(--txt3);display:flex;align-items:center;gap:5px}
+.mi strong{color:var(--txt2)}
+/* progress */
+.prog{height:3px;background:var(--ink4);border-radius:2px;overflow:hidden;margin-bottom:16px;opacity:0;transition:opacity .3s}
+.prog.on{opacity:1}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));width:0;transition:width .5s ease}
+/* source cards */
+.src-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.src-card{background:var(--ink2);border:1px solid var(--rim);border-radius:8px;padding:12px 14px;transition:border-color .25s}
+.sc-flag{font-size:17px;margin-bottom:2px}
+.sc-name{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.07em;color:var(--txt2);text-transform:uppercase;margin-bottom:4px}
+.sc-msg{font-family:var(--mono);font-size:10px}
+.sc-ok{color:var(--go)}.sc-warn{color:var(--yw)}.sc-err{color:var(--rd)}.sc-idle{color:var(--txt3)}
+.sc-sub{font-family:var(--mono);font-size:9px;color:var(--txt3);margin-top:3px}
+/* summary */
+.summ{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.scard{background:var(--ink2);border:1px solid var(--rim);border-radius:8px;padding:13px 16px;border-top:3px solid}
+.s-ext{border-top-color:var(--rd)}.s-hi{border-top-color:var(--og)}.s-el{border-top-color:var(--yw)}.s-mg{border-top-color:var(--go)}.s-av{border-top-color:var(--rim2)}
+.sl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.s-ext .sl{color:var(--rd)}.s-hi .sl{color:var(--og)}.s-el .sl{color:var(--yw)}.s-mg .sl{color:var(--go)}.s-av .sl{color:var(--txt2)}
+.sn{font-family:var(--serif);font-size:27px;font-weight:700;line-height:1;margin-bottom:2px}
+.s-ext .sn{color:var(--rd)}.s-hi .sn{color:var(--og)}.s-el .sn{color:var(--yw)}.s-mg .sn{color:var(--go)}.s-av .sn{color:var(--snow)}
+.ss{font-size:10px;color:var(--txt3)}
+/* controls */
+.ctls{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.srch{position:relative;flex:1;min-width:160px;max-width:240px}
+.srch input{width:100%;background:var(--ink2);border:1px solid var(--rim);border-radius:5px;padding:7px 12px 7px 28px;color:var(--txt);font-family:var(--mono);font-size:11px;outline:none;transition:border-color .2s}
+.srch input:focus{border-color:var(--gold)}.srch input::placeholder{color:var(--txt3)}
+.si{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--txt3);pointer-events:none}
+select.cs{background:var(--ink2);border:1px solid var(--rim);border-radius:5px;padding:7px 12px;color:var(--txt2);font-family:var(--mono);font-size:10px;outline:none;cursor:pointer}
+.fps{display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+.fp{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.05em;padding:5px 11px;border-radius:999px;cursor:pointer;border:1px solid;transition:all .15s;text-transform:uppercase;background:transparent}
+.fp-a{color:var(--txt2);border-color:var(--rim2)}.fp-a.on,.fp-a:hover{background:var(--ink4);color:var(--snow)}
+.fp-x{color:var(--rd);border-color:var(--rd-r)}.fp-x.on,.fp-x:hover{background:var(--rd-b)}
+.fp-h{color:var(--og);border-color:var(--og-r)}.fp-h.on,.fp-h:hover{background:var(--og-b)}
+.fp-e{color:var(--yw);border-color:var(--yw-r)}.fp-e.on,.fp-e:hover{background:var(--yw-b)}
+.fp-m{color:var(--go);border-color:var(--go-r)}.fp-m.on,.fp-m:hover{background:var(--go-b)}
+/* table */
+.twrap{border:1px solid var(--rim);border-radius:10px;overflow:hidden;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:var(--ink3);border-bottom:1px solid var(--rim)}
+th{padding:9px 12px;text-align:left;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);white-space:nowrap;cursor:pointer;user-select:none;transition:color .15s}
+th:hover{color:var(--txt2)}
+tbody tr{border-bottom:1px solid rgba(30,58,95,.4);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:nth-child(even){background:rgba(13,26,45,.4)}
+tbody tr:hover{background:var(--ink3)!important}
+@keyframes rfl{0%{background:rgba(240,165,0,.22)}100%{background:transparent}}
+.rch{animation:rfl 2.5s ease forwards}
+td{padding:9px 12px;vertical-align:middle}
+.tc{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--snow);white-space:nowrap}
+.tco{color:var(--txt2);white-space:nowrap}
+.tn{color:var(--txt3);font-size:10px;line-height:1.5;min-width:165px;max-width:205px}
+.tt{font-family:var(--mono);font-size:9px;color:var(--txt3);white-space:nowrap}
+/* badges */
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-family:var(--mono);font-size:9px;font-weight:600;white-space:nowrap;border:1px solid}
+.bdg .d{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.b1{background:var(--go-b);color:var(--go);border-color:var(--go-r)}.b1 .d{background:var(--go)}
+.b2{background:var(--yw-b);color:var(--yw);border-color:var(--yw-r)}.b2 .d{background:var(--yw)}
+.b3{background:var(--og-b);color:var(--og);border-color:var(--og-r)}.b3 .d{background:var(--og)}
+.b4{background:var(--rd-b);color:var(--rd);border-color:var(--rd-r)}.b4 .d{background:var(--rd)}
+/* score */
+.sw{min-width:90px}
+.snum{font-family:var(--mono);font-size:13px;font-weight:600;line-height:1;margin-bottom:3px}
+.sbg{height:3px;background:var(--ink4);border-radius:2px;overflow:hidden}
+.sb{height:100%;border-radius:2px;transition:width .5s ease}
+.sband{font-family:var(--mono);font-size:8px;letter-spacing:.05em;text-transform:uppercase;margin-top:3px;opacity:.9}
+.dv{font-size:10px;margin-left:4px;cursor:help;opacity:.8}
+/* footer */
+.foot{margin-top:16px;padding-top:12px;border-top:1px solid var(--rim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.foot div{font-family:var(--mono);font-size:9px;color:var(--txt3);line-height:1.8}
+/* age warning */
+.age-warn{background:rgba(201,148,10,.1);border:1px solid rgba(201,148,10,.3);border-radius:8px;padding:10px 16px;margin-bottom:14px;font-family:var(--mono);font-size:11px;color:var(--yw);display:none}
+.age-warn.show{display:block}
+@media print{.bar,.ctls,.fps,.btn,.prog,.src-row,.age-warn{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-l">
+    <span class="tag">VAC Intelligence</span>
+    <span class="bar-title">Sub-Saharan Africa &middot; Advisory Risk Index</span>
+  </div>
+  <div class="bar-r">
+    <div class="spill"><span class="dot d-idle" id="dot"></span><span id="stxt">Loading&hellip;</span></div>
+    <button class="btn btn-ghost" onclick="exportCSV()">&#8595; CSV</button>
+    <button class="btn btn-ghost" onclick="window.print()">&#9178; Print</button>
+    <button class="btn btn-go" id="btnRef" onclick="manualRefresh()">&#10227; Refresh</button>
+  </div>
+</div>
+
+<div class="main">
+  <div class="hdr">
+    <h1>VAC City Travel Advisory <em>Risk Index</em></h1>
+    <div class="meta">
+      <div class="mi">&#128205; <strong>17</strong> VAC cities</div>
+      <div class="mi">&#127959; CA &middot; US &middot; UK &middot; AU</div>
+      <div class="mi">&#128197; Data as of: <strong id="asOf">Loading&hellip;</strong></div>
+      <div class="mi">&#9889; Divergences: <strong id="divN">&mdash;</strong></div>
+      <div class="mi">&#128260; Auto-refresh: <strong>every 6 hours via GitHub Actions</strong></div>
+    </div>
+  </div>
+
+  <div class="age-warn" id="ageWarn">
+    &#9888; Data is more than 12 hours old. GitHub Actions may have been paused. Check the Actions tab on your repository.
+  </div>
+
+  <div class="prog" id="prog"><div class="prog-fill" id="progFill"></div></div>
+
+  <div class="src-row">
+    <div class="src-card" id="card-ca"><div class="sc-flag">&#127464;&#127462;</div><div class="sc-name">Canada (IRCC)</div><div class="sc-msg sc-idle" id="msg-ca">&mdash;</div><div class="sc-sub">data.international.gc.ca</div></div>
+    <div class="src-card" id="card-us"><div class="sc-flag">&#127482;&#127480;</div><div class="sc-name">USA (State Dept)</div><div class="sc-msg sc-idle" id="msg-us">&mdash;</div><div class="sc-sub">travel.state.gov RSS</div></div>
+    <div class="src-card" id="card-uk"><div class="sc-flag">&#127468;&#127463;</div><div class="sc-name">UK FCDO</div><div class="sc-msg sc-idle" id="msg-uk">&mdash;</div><div class="sc-sub">gov.uk/foreign-travel-advice</div></div>
+    <div class="src-card" id="card-au"><div class="sc-flag">&#127462;&#127482;</div><div class="sc-name">Australia (DFAT)</div><div class="sc-msg sc-idle" id="msg-au">&mdash;</div><div class="sc-sub">smartraveller.gov.au</div></div>
+  </div>
+
+  <div class="summ">
+    <div class="scard s-ext"><div class="sl">Extreme Risk</div><div class="sn" id="n-ext">&mdash;</div><div class="ss">Score 76&ndash;100</div></div>
+    <div class="scard s-hi"><div class="sl">High Risk</div><div class="sn" id="n-hi">&mdash;</div><div class="ss">Score 56&ndash;75</div></div>
+    <div class="scard s-el"><div class="sl">Elevated Risk</div><div class="sn" id="n-el">&mdash;</div><div class="ss">Score 31&ndash;55</div></div>
+    <div class="scard s-mg"><div class="sl">Manageable</div><div class="sn" id="n-mg">&mdash;</div><div class="ss">Score 0&ndash;30</div></div>
+    <div class="scard s-av"><div class="sl">Avg WCRI Score</div><div class="sn" id="n-av">&mdash;</div><div class="ss">Portfolio average</div></div>
+  </div>
+
+  <div class="ctls">
+    <div class="srch"><span class="si">&#8981;</span><input type="text" id="q" placeholder="Search city or country&hellip;" oninput="render()"></div>
+    <select class="cs" id="srt" onchange="render()">
+      <option value="sd">Score &#8595;</option><option value="sa">Score &#8593;</option>
+      <option value="city">City A&ndash;Z</option><option value="ctry">Country A&ndash;Z</option>
+      <option value="ca">Canada</option><option value="us">USA</option>
+      <option value="uk">UK FCDO</option><option value="au">Australia</option>
+    </select>
+    <div class="fps">
+      <button class="fp fp-a on" data-b="ALL" onclick="setF(this)">All</button>
+      <button class="fp fp-x" data-b="EXTREME" onclick="setF(this)">&#128308; Extreme</button>
+      <button class="fp fp-h" data-b="HIGH" onclick="setF(this)">&#128992; High</button>
+      <button class="fp fp-e" data-b="ELEVATED" onclick="setF(this)">&#128993; Elevated</button>
+      <button class="fp fp-m" data-b="MANAGEABLE" onclick="setF(this)">&#128994; Manageable</button>
+    </div>
+  </div>
+
+  <div class="twrap">
+    <table>
+      <thead><tr>
+        <th onclick="cs2('city')">City</th>
+        <th onclick="cs2('ctry')">Country</th>
+        <th onclick="cs2('ca')">&#127464;&#127462; Canada</th>
+        <th onclick="cs2('us')">&#127482;&#127480; USA</th>
+        <th onclick="cs2('uk')">&#127468;&#127463; UK FCDO</th>
+        <th onclick="cs2('au')">&#127462;&#127482; Australia</th>
+        <th onclick="cs2('score')">WCRI Score</th>
+        <th>Key Concerns</th>
+        <th>Data Fetched</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div class="foot">
+    <div>
+      Sources: data.international.gc.ca &middot; travel.state.gov RSS &middot; gov.uk/foreign-travel-advice &middot; smartraveller.gov.au<br>
+      WCRI = (CA&times;25% + US&times;30% + UK&times;25% + AU&times;20%) + Divergence &plusmn;15/25 + Regional +5 &middot; Cap 100 &middot; SOP-VAC-001<br>
+      Data fetched server-side by GitHub Actions every 6 hours &mdash; no browser proxy needed
+    </div>
+    <div>
+      <span id="fdate"></span><br>
+      <a href="../../actions" style="color:var(--txt3);text-decoration:none" id="actionsLink">&#9654; View GitHub Actions runs</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+// Replace with your GitHub username and repo name
+const GITHUB_USER = "YOUR_GITHUB_USERNAME";
+const GITHUB_REPO = "vac-advisory";
+const DATA_FILE   = "./advisory_data.json";
+
+// ── Scoring constants ─────────────────────────────────────────────────────────
+const BC = {EXTREME:"#c0392b",HIGH:"#c0622a",ELEVATED:"#c9940a",MANAGEABLE:"#27ae60"};
+const BL = {EXTREME:"&#128308; EXTREME",HIGH:"&#128992; HIGH",ELEVATED:"&#128993; ELEVATED",MANAGEABLE:"&#128994; MANAGEABLE"};
+const SH = {1:"Normal",2:"Caution",3:"Reconsider",4:"Do Not Travel"};
+
+let DATA = null;
+let fBand = "ALL";
+
+// ── Load data ─────────────────────────────────────────────────────────────────
+async function loadData(){
+  setStatus("Loading advisory data&hellip;","d-spin");
+  setProgress(20);
+  try{
+    // Cache-bust to always get latest from GitHub Pages CDN
+    const r = await fetch(DATA_FILE + "?t=" + Date.now());
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    DATA = await r.json();
+    setProgress(100);
+    setTimeout(()=>setProgress(0),600);
+    applyData();
+  }catch(e){
+    setStatus("Failed to load data: " + e.message, "d-err");
+    setProgress(0);
+    console.error("Load error:", e);
+  }
+}
+
+function applyData(){
+  if(!DATA) return;
+
+  // Check data age
+  const ageHours = (Date.now() - DATA.generated_ts * 1000) / 3600000;
+  document.getElementById("ageWarn").classList.toggle("show", ageHours > 12);
+
+  // Format timestamp
+  const dt = new Date(DATA.generated);
+  const dtStr = dt.toLocaleString("en-CA",{dateStyle:"medium",timeStyle:"short",timeZone:"UTC"}) + " UTC";
+  document.getElementById("asOf").textContent = dtStr;
+  setStatus("Live · " + dtStr, ageHours < 12 ? "d-ok" : "d-warn");
+
+  // Source cards
+  const srcInfo = {
+    ca:{flag:"&#127464;&#127462;",label:"Canada",sub:"data.international.gc.ca"},
+    us:{flag:"&#127482;&#127480;",label:"USA",sub:"travel.state.gov RSS"},
+    uk:{flag:"&#127468;&#127463;",label:"UK FCDO",sub:"gov.uk/foreign-travel-advice"},
+    au:{flag:"&#127462;&#127482;",label:"Australia",sub:"smartraveller.gov.au"},
+  };
+  for(const[src,info] of Object.entries(DATA.sources)){
+    const ok = info.ok;
+    document.getElementById("msg-"+src).textContent = ok ? "✓ Live data" : "⚠ Fallback (source failed)";
+    document.getElementById("msg-"+src).className = "sc-msg " + (ok?"sc-ok":"sc-warn");
+    document.getElementById("card-"+src).style.borderColor = ok ? "rgba(39,174,96,.35)" : "rgba(201,148,10,.3)";
+  }
+
+  // Update actions link
+  document.getElementById("actionsLink").href =
+    `https://github.com/${GITHUB_USER}/${GITHUB_REPO}/actions`;
+
+  render();
+}
+
+// ── Render table ──────────────────────────────────────────────────────────────
+function render(){
+  if(!DATA) return;
+  const q = document.getElementById("q").value.toLowerCase();
+  const srt = document.getElementById("srt").value;
+
+  let cities = [...DATA.cities];
+
+  cities.sort((a,b)=>{
+    if(srt==="sd") return b.score-a.score;
+    if(srt==="sa") return a.score-b.score;
+    if(srt==="city") return a.city.localeCompare(b.city);
+    if(srt==="ctry") return a.country.localeCompare(b.country);
+    if(["ca","us","uk","au"].includes(srt)) return b[srt]-a[srt];
+    return 0;
+  });
+
+  cities = cities.filter(c=>{
+    const ob = fBand==="ALL" || c.band===fBand;
+    const os = !q || c.city.toLowerCase().includes(q) || c.country.toLowerCase().includes(q);
+    return ob && os;
+  });
+
+  const ts = new Date(DATA.generated).toLocaleTimeString("en-CA",{timeZone:"UTC"})+" UTC";
+
+  document.getElementById("tbody").innerHTML = cities.map(c=>{
+    const dv = isDivg(c) ? `<span class="dv" title="Sources diverge ≥2 levels">&#9889;</span>` : "";
+    return `<tr>
+      <td class="tc">${c.city}${dv}</td>
+      <td class="tco">${c.country}</td>
+      <td>${badge(c.ca)}</td>
+      <td>${badge(c.us)}</td>
+      <td>${badge(c.uk)}</td>
+      <td>${badge(c.au)}</td>
+      <td>${scoreW(c.score,c.band)}</td>
+      <td class="tn">${c.notes}</td>
+      <td class="tt">${ts}</td>
+    </tr>`;
+  }).join("");
+
+  // Summary counts (always use full dataset, not filtered)
+  const all = DATA.cities;
+  const cnt = {EXTREME:0,HIGH:0,ELEVATED:0,MANAGEABLE:0};
+  let tot=0;
+  all.forEach(c=>{cnt[c.band]++;tot+=c.score;});
+  document.getElementById("n-ext").textContent = cnt.EXTREME;
+  document.getElementById("n-hi").textContent  = cnt.HIGH;
+  document.getElementById("n-el").textContent  = cnt.ELEVATED;
+  document.getElementById("n-mg").textContent  = cnt.MANAGEABLE;
+  document.getElementById("n-av").textContent  = Math.round(tot/all.length);
+  document.getElementById("divN").textContent  = all.filter(isDivg).length;
+}
+
+function isDivg(c){
+  const v=[c.ca,c.us,c.uk,c.au];
+  return Math.max(...v)-Math.min(...v)>=2;
+}
+
+function badge(l){
+  if(!l) return `<span class="bdg"><span class="d"></span>&mdash;</span>`;
+  return `<span class="bdg b${l}"><span class="d"></span>L${l} ${SH[l]}</span>`;
+}
+
+function scoreW(s,b){
+  const c=BC[b], lbl=BL[b];
+  return `<div class="sw">
+    <div class="snum" style="color:${c}">${s}</div>
+    <div class="sbg"><div class="sb" style="width:${s}%;background:${c}"></div></div>
+    <div class="sband" style="color:${c}">${lbl}</div>
+  </div>`;
+}
+
+// ── Manual refresh — triggers GitHub Actions via API ─────────────────────────
+async function manualRefresh(){
+  // Option 1: Just reload the data file (picks up any recent run)
+  const btn = document.getElementById("btnRef");
+  btn.disabled = true;
+  btn.textContent = "Loading\u2026";
+  await loadData();
+  btn.disabled = false;
+  btn.textContent = "\u27f3 Refresh";
+
+  // Option 2: Open GitHub Actions to trigger manually (uncomment if desired)
+  // window.open(`https://github.com/${GITHUB_USER}/${GITHUB_REPO}/actions/workflows/refresh.yml`, '_blank');
+}
+
+function setStatus(msg,cls){
+  document.getElementById("stxt").innerHTML=msg;
+  document.getElementById("dot").className="dot "+cls;
+}
+function setProgress(p){
+  const w=document.getElementById("prog");
+  w.classList.toggle("on",p>0&&p<100);
+  document.getElementById("progFill").style.width=p+"%";
+}
+function setF(el){
+  fBand=el.dataset.b;
+  document.querySelectorAll(".fp").forEach(p=>p.classList.remove("on"));
+  el.classList.add("on");
+  render();
+}
+function cs2(col){
+  const s=document.getElementById("srt");
+  const m={city:"city",ctry:"ctry",ca:"ca",us:"us",uk:"uk",au:"au",score:s.value==="sd"?"sa":"sd"};
+  s.value=m[col]||"sd"; render();
+}
+function exportCSV(){
+  if(!DATA) return;
+  const h=["City","Country","Canada","USA","UK FCDO","Australia","WCRI","Band","Divergence","Notes"];
+  const rows=DATA.cities.map(c=>[
+    c.city,c.country,c.ca,c.us,c.uk,c.au,c.score,c.band,
+    isDivg(c)?"Yes":"No",`"${c.notes.replace(/"/g,'""')}"`
+  ].join(","));
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([[h.join(","),...rows].join("\n")],{type:"text/csv"}));
+  a.download="VAC_Advisory_"+DATA.generated.split("T")[0]+".csv";
+  a.click();
+}
+
+document.getElementById("fdate").textContent =
+  new Date().toLocaleDateString("en-CA",{year:"numeric",month:"long",day:"numeric"});
+
+loadData();
+</script>
+</body>
+</html>

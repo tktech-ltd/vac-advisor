@@ -1,0 +1,245 @@
+{
+  "generated": "2026-03-19T09:02:15.005450+00:00",
+  "generated_ts": 1773910935,
+  "sources": {
+    "ca": {
+      "ok": false,
+      "label": "Canada (travel.gc.ca)"
+    },
+    "us": {
+      "ok": false,
+      "label": "USA (travel.state.gov)"
+    },
+    "uk": {
+      "ok": true,
+      "label": "UK FCDO (gov.uk)"
+    },
+    "au": {
+      "ok": false,
+      "label": "Australia (smartraveller.gov.au)"
+    }
+  },
+  "cities": [
+    {
+      "city": "Ouagadougou",
+      "country": "Burkina Faso",
+      "iso": "BF",
+      "ca": 4,
+      "us": 4,
+      "uk": 4,
+      "au": 4,
+      "score": 100,
+      "band": "EXTREME",
+      "regional": true,
+      "notes": "Terrorism, kidnapping & armed conflict nationwide"
+    },
+    {
+      "city": "Bamako",
+      "country": "Mali",
+      "iso": "ML",
+      "ca": 4,
+      "us": 4,
+      "uk": 4,
+      "au": 4,
+      "score": 100,
+      "band": "EXTREME",
+      "regional": false,
+      "notes": "Terrorism, kidnapping, unpredictable security"
+    },
+    {
+      "city": "Niamey",
+      "country": "Niger",
+      "iso": "NE",
+      "ca": 2,
+      "us": 4,
+      "uk": 4,
+      "au": 4,
+      "score": 100,
+      "band": "EXTREME",
+      "regional": false,
+      "notes": "DIVERGENCE: Canada L2 vs US/UK/AU L4 — kidnap & terror risk very high"
+    },
+    {
+      "city": "Yaoundé",
+      "country": "Cameroon",
+      "iso": "CM",
+      "ca": 2,
+      "us": 2,
+      "uk": 2,
+      "au": 2,
+      "score": 45,
+      "band": "ELEVATED",
+      "regional": true,
+      "notes": "Far North & anglophone NW/SW regions highest risk"
+    },
+    {
+      "city": "Kinshasa",
+      "country": "DR Congo",
+      "iso": "CD",
+      "ca": 3,
+      "us": 4,
+      "uk": 2,
+      "au": 4,
+      "score": 98,
+      "band": "EXTREME",
+      "regional": true,
+      "notes": "Eastern DRC extremely volatile; sources diverge significantly"
+    },
+    {
+      "city": "Addis Ababa",
+      "country": "Ethiopia",
+      "iso": "ET",
+      "ca": 3,
+      "us": 3,
+      "uk": 2,
+      "au": 3,
+      "score": 68,
+      "band": "HIGH",
+      "regional": true,
+      "notes": "Tigray, Amhara, Oromia active conflict zones"
+    },
+    {
+      "city": "Abidjan",
+      "country": "Côte d'Ivoire",
+      "iso": "CI",
+      "ca": 2,
+      "us": 2,
+      "uk": 2,
+      "au": 2,
+      "score": 45,
+      "band": "ELEVATED",
+      "regional": true,
+      "notes": "Borders with Burkina Faso & Mali rated highest risk"
+    },
+    {
+      "city": "Conakry",
+      "country": "Guinea",
+      "iso": "GN",
+      "ca": 2,
+      "us": 2,
+      "uk": 2,
+      "au": 2,
+      "score": 40,
+      "band": "ELEVATED",
+      "regional": false,
+      "notes": "Crime, political instability, civil unrest"
+    },
+    {
+      "city": "Accra",
+      "country": "Ghana",
+      "iso": "GH",
+      "ca": 2,
+      "us": 2,
+      "uk": 2,
+      "au": 2,
+      "score": 40,
+      "band": "ELEVATED",
+      "regional": false,
+      "notes": "Relatively stable; Bawku area higher risk (UK FCDO)"
+    },
+    {
+      "city": "Abuja",
+      "country": "Nigeria",
+      "iso": "NG",
+      "ca": 2,
+      "us": 3,
+      "uk": 2,
+      "au": 3,
+      "score": 60,
+      "band": "HIGH",
+      "regional": true,
+      "notes": "NE Boko Haram zones; US/AU rate higher than CA/UK"
+    },
+    {
+      "city": "Lagos",
+      "country": "Nigeria",
+      "iso": "NG",
+      "ca": 2,
+      "us": 3,
+      "uk": 2,
+      "au": 3,
+      "score": 60,
+      "band": "HIGH",
+      "regional": true,
+      "notes": "NE Boko Haram zones; US/AU rate higher than CA/UK"
+    },
+    {
+      "city": "Nairobi",
+      "country": "Kenya",
+      "iso": "KE",
+      "ca": 2,
+      "us": 2,
+      "uk": 2,
+      "au": 2,
+      "score": 45,
+      "band": "ELEVATED",
+      "regional": true,
+      "notes": "Terrorism risk; N. Kenya & Somali border highest risk"
+    },
+    {
+      "city": "Antananarivo",
+      "country": "Madagascar",
+      "iso": "MG",
+      "ca": 2,
+      "us": 2,
+      "uk": 2,
+      "au": 2,
+      "score": 40,
+      "band": "ELEVATED",
+      "regional": false,
+      "notes": "Crime, political instability"
+    },
+    {
+      "city": "Pretoria",
+      "country": "South Africa",
+      "iso": "ZA",
+      "ca": 2,
+      "us": 2,
+      "uk": 2,
+      "au": 2,
+      "score": 45,
+      "band": "ELEVATED",
+      "regional": true,
+      "notes": "High violent crime & carjacking rates"
+    },
+    {
+      "city": "Cape Town",
+      "country": "South Africa",
+      "iso": "ZA",
+      "ca": 2,
+      "us": 2,
+      "uk": 2,
+      "au": 2,
+      "score": 45,
+      "band": "ELEVATED",
+      "regional": true,
+      "notes": "High violent crime & carjacking rates"
+    },
+    {
+      "city": "Port Louis",
+      "country": "Mauritius",
+      "iso": "MU",
+      "ca": 2,
+      "us": 1,
+      "uk": 1,
+      "au": 2,
+      "score": 24,
+      "band": "MANAGEABLE",
+      "regional": false,
+      "notes": "Relatively safe; Canada/AU L2 vs US/UK L1"
+    },
+    {
+      "city": "Dakar",
+      "country": "Senegal",
+      "iso": "SN",
+      "ca": 2,
+      "us": 1,
+      "uk": 2,
+      "au": 2,
+      "score": 31,
+      "band": "ELEVATED",
+      "regional": false,
+      "notes": "Generally stable; US most relaxed of 4 sources"
+    }
+  ]
+}
