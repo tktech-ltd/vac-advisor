@@ -7,6 +7,10 @@ on:
   # Allow manual trigger from GitHub Actions tab
   workflow_dispatch:
 
+# Silences the Node.js 20 deprecation warning
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: write
 
@@ -25,7 +29,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install requests lxml beautifulsoup4
+        run: pip install requests
 
       - name: Fetch all advisory sources
         run: python fetch_advisories.py
