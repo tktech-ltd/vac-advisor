@@ -129,4 +129,5 @@ Score = (CA×25% + US×30% + UK×25% + AU×20%)
       [capped at 100]
 
 Bands:  0-30 Manageable | 31-55 Elevated | 56-75 High | 76-100 Extreme
-```
+
+
