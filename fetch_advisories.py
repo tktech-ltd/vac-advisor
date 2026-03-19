@@ -155,45 +155,72 @@ def fetch_uk():
     return result, True
 
 # ── AUSTRALIA ──────────────────────────────────────────────────────────────────
+# The destinations-export API endpoint is unreliable.
+# We scrape individual country pages instead — same approach as UK FCDO.
 AU_SLUG_MAP = {
-    "BF": "burkina-faso", "ML": "mali",    "NE": "niger",     "CM": "cameroon",
-    "CD": "democratic-republic-congo",     "ET": "ethiopia",   "CI": "cote-divoire",
-    "GN": "guinea",       "GH": "ghana",   "NG": "nigeria",   "KE": "kenya",
-    "MG": "madagascar",   "ZA": "south-africa",               "MU": "mauritius",
-    "SN": "senegal",
+    "BF": "africa/burkina-faso",
+    "ML": "africa/mali",
+    "NE": "africa/niger",
+    "CM": "africa/cameroon",
+    "CD": "africa/democratic-republic-congo",
+    "ET": "africa/ethiopia",
+    "CI": "africa/cote-divoire",
+    "GN": "africa/guinea",
+    "GH": "africa/ghana",
+    "NG": "africa/nigeria",
+    "KE": "africa/kenya",
+    "MG": "africa/madagascar",
+    "ZA": "africa/south-africa",
+    "MU": "africa/mauritius",
+    "SN": "africa/senegal",
 }
 
+def parse_au_level(html_lower):
+    """Parse Smartraveller advisory level from page HTML.
+    Smartraveller uses these exact phrases in their advice level banners:
+      Level 1: 'exercise normal safety precautions'
+      Level 2: 'exercise a high degree of caution'
+      Level 3: 'reconsider your need to travel'
+      Level 4: 'do not travel'
+    """
+    if "do not travel" in html_lower:
+        return 4
+    if "reconsider your need to travel" in html_lower:
+        return 3
+    if "high degree of caution" in html_lower:
+        return 2
+    if "exercise normal safety precautions" in html_lower or "normal safety precautions" in html_lower:
+        return 1
+    return 2  # conservative default
+
 def fetch_australia():
-    """Official Smartraveller destinations API."""
-    print("Fetching Australia...")
-    try:
-        data = get("https://www.smartraveller.gov.au/destinations-export").json()
-        destinations = data if isinstance(data, list) else data.get("destinations", data.get("data", []))
-        by_slug = {}
-        by_name = {}
-        for d in destinations:
-            slug = (d.get("slug") or "").split("/")[-1].lower().strip()
-            name = (d.get("country") or d.get("name") or "").lower().strip()
-            lvl  = d.get("advice_level") or d.get("adviceLevel") or d.get("level")
-            if slug and lvl:
-                by_slug[slug] = int(lvl)
-            if name and lvl:
-                by_name[name] = int(lvl)
+    """Scrape individual Smartraveller country pages. Deduplicated by slug."""
+    print("Fetching Australia (page scrape)...")
+    slug_cache = {}
+    result = {}
+    ok_count = 0
+    fail_count = 0
 
-        result = {}
-        for iso, slug in AU_SLUG_MAP.items():
-            lvl = by_slug.get(slug)
-            if not lvl:
-                # Try matching by country name
-                country = next((c["country"].lower() for c in VAC_CITIES if c["iso"] == iso), "")
-                lvl = by_name.get(country)
-            result[iso] = lvl or FALLBACK["au"].get(iso, 2)
+    for iso, slug in AU_SLUG_MAP.items():
+        if slug in slug_cache:
+            result[iso] = slug_cache[slug]
+            continue
+        try:
+            html = get(f"https://www.smartraveller.gov.au/destinations/{slug}").text
+            lvl = parse_au_level(html.lower())
+            slug_cache[slug] = lvl
+            result[iso] = lvl
+            print(f"  AU {slug}: L{lvl}")
+            ok_count += 1
+        except Exception as e:
+            print(f"  AU {slug} FAILED: {e}")
+            slug_cache[slug] = FALLBACK["au"].get(iso, 2)
+            result[iso] = FALLBACK["au"].get(iso, 2)
+            fail_count += 1
 
-        print(f"  Australia: {len([v for v in result.values() if v])} matched")
-        return result, True
-    except Exception as e:
-        print(f"  Australia FAILED: {e} — using fallback")
-        return FALLBACK["au"].copy(), False
+    all_ok = fail_count == 0
+    print(f"  Australia: {ok_count} live, {fail_count} fallback")
+    return result, all_ok
 
 # ── WCRI SCORING ───────────────────────────────────────────────────────────────
 PTS = {1: 10, 2: 40, 3: 70, 4: 100}
