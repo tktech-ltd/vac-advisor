@@ -1,6 +1,6 @@
 {
-  "generated": "2026-04-02T09:42:56.900003+00:00",
-  "generated_ts": 1775123364,
+  "generated": "2026-04-02T15:38:56.338121+00:00",
+  "generated_ts": 1775144725,
   "sources": {
     "ca": {
       "ok": true,
@@ -142,11 +142,11 @@
       "country": "Nigeria",
       "iso": "NG",
       "ca": 2,
-      "us": 1,
+      "us": 4,
       "uk": 2,
       "au": 3,
-      "score": 57,
-      "band": "HIGH",
+      "score": 84,
+      "band": "EXTREME",
       "regional": true,
       "notes": "NE Boko Haram zones; US/AU rate higher than CA/UK"
     },
@@ -155,11 +155,11 @@
       "country": "Nigeria",
       "iso": "NG",
       "ca": 2,
-      "us": 1,
+      "us": 4,
       "uk": 2,
       "au": 3,
-      "score": 57,
-      "band": "HIGH",
+      "score": 84,
+      "band": "EXTREME",
       "regional": true,
       "notes": "NE Boko Haram zones; US/AU rate higher than CA/UK"
     },
