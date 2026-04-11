@@ -1,6 +1,6 @@
 {
-  "generated": "2026-04-11T05:22:47.103767+00:00",
-  "generated_ts": 1775885356,
+  "generated": "2026-04-11T08:01:47.560280+00:00",
+  "generated_ts": 1775894896,
   "sources": {
     "ca": {
       "ok": true,
@@ -181,10 +181,10 @@
       "country": "Madagascar",
       "iso": "MG",
       "ca": 2,
-      "us": 1,
+      "us": 2,
       "uk": 2,
       "au": 2,
-      "score": 31,
+      "score": 40,
       "band": "ELEVATED",
       "regional": false,
       "notes": "Crime, political instability"
