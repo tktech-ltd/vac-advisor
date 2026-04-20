@@ -1,6 +1,6 @@
 {
-  "generated": "2026-04-19T19:02:44.276102+00:00",
-  "generated_ts": 1776625750,
+  "generated": "2026-04-20T03:41:06.069952+00:00",
+  "generated_ts": 1776656858,
   "sources": {
     "ca": {
       "ok": true,
@@ -25,10 +25,10 @@
       "country": "Burkina Faso",
       "iso": "BF",
       "ca": 3,
-      "us": 2,
+      "us": 4,
       "uk": 2,
       "au": 4,
-      "score": 80,
+      "score": 98,
       "band": "EXTREME",
       "regional": true,
       "notes": "Terrorism, kidnapping & armed conflict nationwide"
@@ -77,10 +77,10 @@
       "country": "DR Congo",
       "iso": "CD",
       "ca": 2,
-      "us": 3,
+      "us": 4,
       "uk": 2,
       "au": 4,
-      "score": 81,
+      "score": 90,
       "band": "EXTREME",
       "regional": true,
       "notes": "Eastern DRC extremely volatile; sources diverge significantly"
@@ -181,10 +181,10 @@
       "country": "Madagascar",
       "iso": "MG",
       "ca": 2,
-      "us": 1,
+      "us": 2,
       "uk": 2,
       "au": 2,
-      "score": 31,
+      "score": 40,
       "band": "ELEVATED",
       "regional": false,
       "notes": "Crime, political instability"
@@ -220,11 +220,11 @@
       "country": "Mauritius",
       "iso": "MU",
       "ca": 1,
-      "us": 3,
+      "us": 1,
       "uk": 2,
       "au": 2,
-      "score": 56,
-      "band": "HIGH",
+      "score": 24,
+      "band": "MANAGEABLE",
       "regional": false,
       "notes": "Relatively safe; Canada/AU L2 vs US/UK L1"
     },
