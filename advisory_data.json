@@ -1,6 +1,6 @@
 {
-  "generated": "2026-04-23T08:06:50.506005+00:00",
-  "generated_ts": 1776931995,
+  "generated": "2026-04-23T14:03:32.369253+00:00",
+  "generated_ts": 1776953403,
   "sources": {
     "ca": {
       "ok": true,
@@ -181,10 +181,10 @@
       "country": "Madagascar",
       "iso": "MG",
       "ca": 2,
-      "us": 1,
+      "us": 2,
       "uk": 2,
       "au": 2,
-      "score": 31,
+      "score": 40,
       "band": "ELEVATED",
       "regional": false,
       "notes": "Crime, political instability"
@@ -220,11 +220,11 @@
       "country": "Mauritius",
       "iso": "MU",
       "ca": 1,
-      "us": 3,
+      "us": 1,
       "uk": 2,
       "au": 2,
-      "score": 56,
-      "band": "HIGH",
+      "score": 24,
+      "band": "MANAGEABLE",
       "regional": false,
       "notes": "Relatively safe; Canada/AU L2 vs US/UK L1"
     },
