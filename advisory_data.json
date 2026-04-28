@@ -1,6 +1,6 @@
 {
-  "generated": "2026-04-28T14:33:27.390675+00:00",
-  "generated_ts": 1777387191,
+  "generated": "2026-04-28T19:51:14.904764+00:00",
+  "generated_ts": 1777406263,
   "sources": {
     "ca": {
       "ok": true,
@@ -77,10 +77,10 @@
       "country": "DR Congo",
       "iso": "CD",
       "ca": 2,
-      "us": 3,
+      "us": 4,
       "uk": 2,
       "au": 4,
-      "score": 81,
+      "score": 90,
       "band": "EXTREME",
       "regional": true,
       "notes": "Eastern DRC extremely volatile; sources diverge significantly"
