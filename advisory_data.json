@@ -1,6 +1,6 @@
 {
-  "generated": "2026-05-09T19:14:44.255878+00:00",
-  "generated_ts": 1778354469,
+  "generated": "2026-05-10T04:01:01.243611+00:00",
+  "generated_ts": 1778386046,
   "sources": {
     "ca": {
       "ok": true,
@@ -25,10 +25,10 @@
       "country": "Burkina Faso",
       "iso": "BF",
       "ca": 3,
-      "us": 4,
+      "us": 2,
       "uk": 2,
       "au": 4,
-      "score": 98,
+      "score": 80,
       "band": "EXTREME",
       "regional": true,
       "notes": "Terrorism, kidnapping & armed conflict nationwide"
