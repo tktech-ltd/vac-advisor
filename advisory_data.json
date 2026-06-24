@@ -1,6 +1,6 @@
 {
-  "generated": "2026-06-24T09:44:51.857644+00:00",
-  "generated_ts": 1782294680,
+  "generated": "2026-06-24T14:47:57.943586+00:00",
+  "generated_ts": 1782312866,
   "sources": {
     "ca": {
       "ok": true,
@@ -220,11 +220,11 @@
       "country": "Mauritius",
       "iso": "MU",
       "ca": 1,
-      "us": 3,
+      "us": 1,
       "uk": 2,
       "au": 2,
-      "score": 56,
-      "band": "HIGH",
+      "score": 24,
+      "band": "MANAGEABLE",
       "regional": false,
       "notes": "Relatively safe; Canada/AU L2 vs US/UK L1"
     },
