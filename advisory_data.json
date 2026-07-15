@@ -1,6 +1,6 @@
 {
-  "generated": "2026-07-15T08:26:58.825211+00:00",
-  "generated_ts": 1784104411,
+  "generated": "2026-07-15T13:58:54.046722+00:00",
+  "generated_ts": 1784124317,
   "sources": {
     "ca": {
       "ok": true,
@@ -142,11 +142,11 @@
       "country": "Nigeria",
       "iso": "NG",
       "ca": 2,
-      "us": 3,
+      "us": 4,
       "uk": 2,
       "au": 3,
-      "score": 60,
-      "band": "HIGH",
+      "score": 84,
+      "band": "EXTREME",
       "regional": true,
       "notes": "NE Boko Haram zones; US/AU rate higher than CA/UK"
     },
@@ -155,11 +155,11 @@
       "country": "Nigeria",
       "iso": "NG",
       "ca": 2,
-      "us": 3,
+      "us": 4,
       "uk": 2,
       "au": 3,
-      "score": 60,
-      "band": "HIGH",
+      "score": 84,
+      "band": "EXTREME",
       "regional": true,
       "notes": "NE Boko Haram zones; US/AU rate higher than CA/UK"
     },
@@ -220,11 +220,11 @@
       "country": "Mauritius",
       "iso": "MU",
       "ca": 1,
-      "us": 1,
+      "us": 3,
       "uk": 2,
       "au": 2,
-      "score": 24,
-      "band": "MANAGEABLE",
+      "score": 56,
+      "band": "HIGH",
       "regional": false,
       "notes": "Relatively safe; Canada/AU L2 vs US/UK L1"
     },
