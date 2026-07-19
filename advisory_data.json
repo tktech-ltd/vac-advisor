@@ -1,6 +1,6 @@
 {
-  "generated": "2026-07-19T03:35:43.672702+00:00",
-  "generated_ts": 1784432531,
+  "generated": "2026-07-19T08:28:57.798176+00:00",
+  "generated_ts": 1784450129,
   "sources": {
     "ca": {
       "ok": true,
@@ -25,10 +25,10 @@
       "country": "Burkina Faso",
       "iso": "BF",
       "ca": 3,
-      "us": 2,
+      "us": 4,
       "uk": 2,
       "au": 4,
-      "score": 80,
+      "score": 98,
       "band": "EXTREME",
       "regional": true,
       "notes": "Terrorism, kidnapping & armed conflict nationwide"
@@ -181,10 +181,10 @@
       "country": "Madagascar",
       "iso": "MG",
       "ca": 2,
-      "us": 1,
+      "us": 2,
       "uk": 2,
       "au": 2,
-      "score": 31,
+      "score": 40,
       "band": "ELEVATED",
       "regional": false,
       "notes": "Crime, political instability"
@@ -194,10 +194,10 @@
       "country": "South Africa",
       "iso": "ZA",
       "ca": 2,
-      "us": 1,
+      "us": 2,
       "uk": 2,
       "au": 2,
-      "score": 36,
+      "score": 45,
       "band": "ELEVATED",
       "regional": true,
       "notes": "High violent crime & carjacking rates"
@@ -207,10 +207,10 @@
       "country": "South Africa",
       "iso": "ZA",
       "ca": 2,
-      "us": 1,
+      "us": 2,
       "uk": 2,
       "au": 2,
-      "score": 36,
+      "score": 45,
       "band": "ELEVATED",
       "regional": true,
       "notes": "High violent crime & carjacking rates"
