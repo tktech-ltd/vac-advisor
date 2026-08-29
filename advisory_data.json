@@ -1,6 +1,6 @@
 {
-  "generated": "2026-08-29T16:37:22.911789+00:00",
-  "generated_ts": 1788021824,
+  "generated": "2026-08-29T20:49:49.200484+00:00",
+  "generated_ts": 1788036972,
   "sources": {
     "ca": {
       "ok": true,
@@ -38,10 +38,10 @@
       "country": "Mali",
       "iso": "ML",
       "ca": 3,
-      "us": 1,
+      "us": 4,
       "uk": 2,
       "au": 4,
-      "score": 76,
+      "score": 92,
       "band": "EXTREME",
       "regional": false,
       "notes": "Terrorism, kidnapping, unpredictable security"
@@ -168,10 +168,10 @@
       "country": "Kenya",
       "iso": "KE",
       "ca": 2,
-      "us": 2,
+      "us": 1,
       "uk": 2,
       "au": 2,
-      "score": 45,
+      "score": 36,
       "band": "ELEVATED",
       "regional": true,
       "notes": "Terrorism risk; N. Kenya & Somali border highest risk"
