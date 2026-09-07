@@ -1,6 +1,6 @@
 {
-  "generated": "2026-09-07T04:15:00.615588+00:00",
-  "generated_ts": 1788754886,
+  "generated": "2026-09-07T12:14:02.549611+00:00",
+  "generated_ts": 1788783625,
   "sources": {
     "ca": {
       "ok": true,
@@ -38,10 +38,10 @@
       "country": "Mali",
       "iso": "ML",
       "ca": 3,
-      "us": 4,
+      "us": 1,
       "uk": 2,
       "au": 4,
-      "score": 92,
+      "score": 76,
       "band": "EXTREME",
       "regional": false,
       "notes": "Terrorism, kidnapping, unpredictable security"
