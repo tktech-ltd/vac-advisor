@@ -1,6 +1,6 @@
 {
-  "generated": "2026-09-27T05:01:44.739791+00:00",
-  "generated_ts": 1790485694,
+  "generated": "2026-09-27T11:51:45.823498+00:00",
+  "generated_ts": 1790510287,
   "sources": {
     "ca": {
       "ok": true,
@@ -90,10 +90,10 @@
       "country": "Ethiopia",
       "iso": "ET",
       "ca": 2,
-      "us": 1,
+      "us": 3,
       "uk": 2,
       "au": 3,
-      "score": 57,
+      "score": 60,
       "band": "HIGH",
       "regional": true,
       "notes": "Tigray, Amhara, Oromia active conflict zones"
