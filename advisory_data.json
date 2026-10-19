@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-19T12:50:56.890091+00:00",
-  "generated_ts": 1792414638,
+  "generated": "2026-10-19T22:14:20.443434+00:00",
+  "generated_ts": 1792448446,
   "sources": {
     "ca": {
       "ok": true,
@@ -168,10 +168,10 @@
       "country": "Kenya",
       "iso": "KE",
       "ca": 2,
-      "us": 2,
+      "us": 3,
       "uk": 2,
       "au": 2,
-      "score": 45,
+      "score": 54,
       "band": "ELEVATED",
       "regional": true,
       "notes": "Terrorism risk; N. Kenya & Somali border highest risk"
